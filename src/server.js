@@ -4,8 +4,9 @@ const axios = require('axios')
 const path = require('path')
 const app = express()
 app.use(express.static(path.join(__dirname, 'build')))
+const myKey = require('./myKey.json')
 
-const apiKey = ""
+const apiKey = myKey.apiKey
 const gbApiUrlWithoutQuery = "https://www.giantbomb.com/api/search/?api_key=" + apiKey + "&resources=game&format=json&query="
 
 // Body Parser middleware
