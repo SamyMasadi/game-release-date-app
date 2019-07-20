@@ -13,6 +13,13 @@ class Home extends React.Component {
     this.performSearch = this.performSearch.bind(this)
   }
 
+  /**
+   * Next.js method used set up the search results from the server
+   * @param {query} query Although the default use of the parameter is for a query
+   * received from a request, any object can be passed, so I simply pass the 
+   * search results from the server.
+   * @return the json API results passed from the server
+   */
   static async getInitialProps({ query }) {
     if (Object.entries(query).length > 0) {
       return { results: query }
@@ -20,6 +27,9 @@ class Home extends React.Component {
     return { results: null }
   }
 
+  /**
+   * Use to show the API search results, if any
+   */
   componentDidMount() {
     if (!this.props.results) {
       return
@@ -35,6 +45,10 @@ class Home extends React.Component {
     this.setState({rows: gameRows})
   }
 
+  /**
+   * Searches initiate a server route.
+   * Due to CORS limitations, all requests to Giant Bomb's API must be from the server.
+   */
   performSearch() {
     var searchTerm = document.getElementById("search-bar").value
     if(!searchTerm || !searchTerm.trim()) {

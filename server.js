@@ -13,6 +13,9 @@ const gbApiUrlWithoutQuery = "https://www.giantbomb.com/api/search/?api_key=" + 
 app.prepare().then(() => {
   const server = express()
 
+  /**
+   * Route acts as middleware between client and Giant Bomb's API.
+   */
   server.get('/search/:query', (request, response) => {
     const giantBombAPIURL = gbApiUrlWithoutQuery + request.params.query
     axios.get(giantBombAPIURL)
@@ -22,7 +25,7 @@ app.prepare().then(() => {
             return app.render(request, response, '/index', results)
 		})
 		.catch(error => {
-            console.log("There was an error with the API request:\n" + error)
+            console.log('There was an error with the API request:\n' + error)
             res.redirect('/')
         })    
   })
