@@ -2,6 +2,10 @@
   font-size: 12pt;
 }
 
+button {
+  cursor: pointer;
+}
+
 #header-container {
   background-color: #000;
   display: block;
@@ -10,13 +14,28 @@
   padding: 20px;
 }
 
-#search-bar {
+.search-bar {
+  display: inline-block;
   font-size: 16pt;
-  width: calc(100% - 42.5px);
   padding-top: 8px;
   padding-bottom: 8px;
+}
+
+#search-field {
+  width: calc(100% - 42.5px - 85px);
   padding-left: 20px;
   padding-right: 20px;
+  border:  none;  
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+li:nth-child(odd) {
+  background: #f7f7f7;
 }
 
 .row-container {
@@ -32,37 +51,3 @@
   padding-left: 2%;
   width: 65%;
 }
-
-/*.App {
-  text-align: center;
-}
-
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}*/

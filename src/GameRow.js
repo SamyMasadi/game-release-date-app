@@ -1,15 +1,20 @@
 import React from 'react'
 
 function GameRow(props) {
+
   return (
-    <div className="row-container">
-      <img alt="poster" src={props.game.image.thumb_url}/>
+    <li className="row-container">
+      <img alt="cover" src={props.game.image.thumb_url}/>
       <div className="row-content">
-        {props.game.name}
+        <b>{props.game.name}</b>
         <p>{props.game.deck}</p>
+        <a href={props.game.site_detail_url}>
+          <button>More info</button>
+        </a>
       </div>
-    </div>
+    </li>
   )
+
 }
 
 export default GameRow

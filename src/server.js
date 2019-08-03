@@ -1,13 +1,13 @@
 const express = require('express')
+const app = express()
 const axios = require('axios')
 // const bodyParser = require('body-parser')
-const path = require('path')
-const app = express()
-app.use(express.static(path.join(__dirname, 'build')))
+//const path = require('path')
+
+app.use(express.static('../build'))
 const myKey = require('./myKey.json')
 
-const apiKey = myKey.apiKey
-const gbApiUrlWithoutQuery = "https://www.giantbomb.com/api/search/?api_key=" + apiKey + "&resources=game&format=json&query="
+const gbApiUrlWithoutQuery = "https://www.giantbomb.com/api/search/?api_key=" + myKey.apiKey + "&resources=game&format=json&query="
 
 // Body Parser middleware
 // app.use(bodyParser.json())
@@ -17,17 +17,26 @@ app.listen(process.env.PORT || 8080, () => {
     console.log('Server started on port 8080')
 })
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'))
+app.get('/', (request, response) => {
+    response.sendFile('index.html', { root: '../build' })
 })
 
-app.get('/search/:query', (request, response) => {
+app.get('/search', (request, response) => {
+    response.redirect('/')
+})
+
+app.get('/search/*', (request, response) => {
+	console.log("sending page with search term")
+	response.sendFile('index.html', { root: '../build' })
+})
+
+app.get('/api/:query', (request, response) => {
 	const query = request.params.query
     const giantBombAPIURL = gbApiUrlWithoutQuery + query
     axios.get(giantBombAPIURL)
 		.then(apiResponse => {
 			console.log("Fetched results for " + query)
-			response.send(apiResponse.data)
+			response.send(apiResponse.data.results)
 		})
 		.catch(error => {
 			console.log(error)
