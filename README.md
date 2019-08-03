@@ -1,3 +1,34 @@
+# Game Release Date App (In Development)
+
+A web app for searching basic video game info and release dates from [GiantBomb.com's API](https://www.giantbomb.com/api/).
+
+The project utilizes JavaScript, HTML, CSS, React.js, Create React App, Node.js, Express.js, and Axios.js.
+
+## Required Software
+
+Node.js: https://nodejs.org/en/
+
+## Initial Setup
+
+1. Get a free API key from GiantBomb.com: https://www.giantbomb.com/api/
+2. Add your key to ./src/myKey.json
+```
+{
+    "apiKey": "Your Key Here"
+}
+```
+Note: The API key is only loaded by the Express Node server, so it should not be bundled into client pages by Webpack.<br>
+
+3. Run npm install in the app directory to set up node modules list in package.json
+```
+cd <app directory>
+npm install
+```
+## Author
+Samy Masadi - https://github.com/SamyMasadi
+
+## From Create React App:
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
