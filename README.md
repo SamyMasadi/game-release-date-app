@@ -24,7 +24,18 @@ Note: The API key is only loaded by the Express Node server, so it should not be
 cd <app directory>
 npm install
 ```
+
+## How to Run
+
+```
+cd <app directory>
+npm run build
+node ./src/server.js
+```
+Load localhost:8080 in a web browser.
+
 ## Author
+
 Samy Masadi - https://github.com/SamyMasadi
 
 ## From Create React App:

@@ -1,0 +1,13 @@
+.search-bar {
+  display: inline-block;
+  font-size: 16pt;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+#search-field {
+  width: calc(100% - 42.5px - 85px);
+  padding-left: 20px;
+  padding-right: 20px;
+  border:  none;  
+}

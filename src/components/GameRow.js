@@ -1,4 +1,5 @@
 import React from 'react'
+import '../styles/GameRow.css'
 
 function GameRow(props) {
 

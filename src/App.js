@@ -1,31 +1,35 @@
 import React from 'react'
-import './App.css'
-import GameRow from './GameRow.js'
+import './styles/App.css'
+import Header from './components/Header.js'
+import SearchBar from './components/SearchBar.js'
+import SearchResults from './components/SearchResults.js'
 
 class App extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = { searchBarValue: "" }
-    this.state.searchTerm = this.getSearchTermFromURL()
 
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleSearchValueChange = this.handleSearchValueChange.bind(this)
+    this.handleSearchSubmit = this.handleSearchSubmit.bind(this)
     this.pushHistoryState = this.pushHistoryState.bind(this)
-    this.performSearch = this.performSearch.bind(this)
-    this.renderGameRows = this.renderGameRows.bind(this)
   }
 
   componentDidMount() {
-    this.updateHistoryState("", [])
-    if (this.state.searchTerm) {
-      this.performSearch(this.state.searchTerm)
+    const initialSearchTerm = this.getSearchTermFromURL()
+    if (initialSearchTerm) {
+      this.updateHistoryState(initialSearchTerm, null)
+      this.setState({ searchTerm: initialSearchTerm })
+    }
+    else {
+      this.updateHistoryState("", [])
     }
     window.onpopstate = (event) => {
-      this.setState({ searchBarValue: event.state.searchTerm })
-      this.renderGameRows(event.state.searchTerm, event.state.results)
+      this.setState({
+        searchBarValue: event.state.searchTerm,
+        searchTerm: event.state.searchTerm
+      })
     }
-    document.getElementById("search-field").focus()
   }
 
   getSearchTermFromURL() {
@@ -40,46 +44,28 @@ class App extends React.Component {
     return searchTerm
   }
 
-  handleChange(event) {
+  handleSearchValueChange(event) {
     this.setState({ searchBarValue: event.target.value })
   }
 
-  handleSubmit(event) {
+  handleSearchSubmit(event) {
     event.preventDefault()
     let newSearch = this.state.searchBarValue
     if(!newSearch || !newSearch.trim()) {
       return
     }
-    newSearch = newSearch.trim()
-    this.pushHistoryState(newSearch)    
+    newSearch = newSearch.trim()    
+    this.pushHistoryState(newSearch)
+    this.setState({ searchTerm: newSearch })
   }
 
   pushHistoryState(newSearch) {
-    const newURL = "/search/" + newSearch
     let newState = { searchTerm: newSearch }
     if (newSearch === this.state.searchTerm) {
       newState.results = window.history.state.results
     }
+    const newURL = "/search/" + newSearch
     window.history.pushState(newState, newSearch, newURL)
-    if (newSearch !== this.state.searchTerm) {
-      this.performSearch(newSearch)
-    }
-  }
- 
-  performSearch(searchTerm) {
-    console.log("Searching: " + searchTerm)
-    const queryURL = "/api/" + searchTerm
-    fetch(queryURL)
-      .then(response => {
-        return response.json()
-      })
-      .then(resultsJSON => {
-        this.updateHistoryState(searchTerm, resultsJSON)
-        this.renderGameRows(searchTerm, resultsJSON)
-      })
-      .catch(() => {
-        alert('The search failed. Please try again.')
-      })
   }
 
   updateHistoryState(searchTerm, gamesJSON) {
@@ -92,42 +78,22 @@ class App extends React.Component {
     )
   }
 
-  renderGameRows(searchTerm, gamesJSON) {
-    let gameRows = []
-    gamesJSON.forEach(game => {
-      const gameRow = <GameRow key={game.id} game={game}/>
-      gameRows.push(gameRow)
-    })
-    this.setState({
-      searchTerm: searchTerm, 
-      rows: gameRows
-    })
-  }
-
   render() {
     return (
       <div className="App">
         
-        <div id="header-container">
-          <div><b>Video Game Search</b></div>
-        </div>
-        
-        <form onSubmit={this.handleSubmit}>
-          <input 
-            className="search-bar" 
-            id="search-field" 
-            type="text" 
-            value={this.state.searchBarValue} 
-            onChange={this.handleChange} 
-            placeholder="Search games" 
-            required minLength="1"
-          />
-          <button className="search-bar" type="submit">Search</button>
-        </form>
+        <Header/>
 
-        <ul>
-          {this.state.rows}
-        </ul>
+        <SearchBar 
+          handleSearchSubmit={this.handleSearchSubmit} 
+          searchBarValue={this.state.searchBarValue} 
+          handleSearchValueChange={this.handleSearchValueChange} 
+        />
+
+        <SearchResults 
+          searchTerm={this.state.searchTerm} 
+          updateHistoryState={this.updateHistoryState} 
+        />
 
       </div>
     )

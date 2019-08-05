@@ -1,0 +1,17 @@
+li:nth-child(odd) {
+  background: #f7f7f7;
+}
+
+.row-container {
+  display: flex;
+  align-items: flex-start;
+}
+
+.row-container img {
+  width: 30%;
+}
+
+.row-content {
+  padding-left: 2%;
+  width: 65%;
+}
