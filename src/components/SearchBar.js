@@ -3,8 +3,26 @@ import '../styles/SearchBar.css'
 
 class SearchBar extends React.Component {
 
+  constructor(props) {
+    super(props)
+    this.state = { searchButtonID: "invalid-search-button" }
+  }
+
   componentDidMount() {
     document.getElementById("search-field").focus()
+  }
+
+  componentDidUpdate(prevProps) {
+    let searchValue = this.props.searchBarValue
+    let prevSearchValue = prevProps.searchBarValue
+    searchValue = searchValue.trim()
+    prevSearchValue = prevSearchValue.trim()
+    if (searchValue.length > 0 && prevSearchValue.length === 0) {
+      this.setState({ searchButtonID: "valid-search-button" })
+    }
+    if (searchValue.length === 0 && prevSearchValue.length > 0) {
+      this.setState({ searchButtonID: "invalid-search-button" })
+    }
   }
 
   render() {
@@ -19,7 +37,9 @@ class SearchBar extends React.Component {
           placeholder="Search games" 
           required minLength="1"
         />
-        <button className="search-bar" type="submit">Search</button>
+        <button className="search-bar search-button" id={this.state.searchButtonID} type="submit">
+          <div id="magnifying-glass"></div>
+        </button>
       </form>
     )
   }

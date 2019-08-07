@@ -1,8 +1,8 @@
 import React from 'react'
-import './styles/App.css'
-import Header from './components/Header.js'
-import SearchBar from './components/SearchBar.js'
-import SearchResults from './components/SearchResults.js'
+import '../styles/App.css'
+import Header from './Header.js'
+import SearchBar from './SearchBar.js'
+import ResultsArea from './ResultsArea.js'
 
 class App extends React.Component {
 
@@ -83,18 +83,18 @@ class App extends React.Component {
       <div className="App">
         
         <Header/>
-
+        
         <SearchBar 
           handleSearchSubmit={this.handleSearchSubmit} 
           searchBarValue={this.state.searchBarValue} 
           handleSearchValueChange={this.handleSearchValueChange} 
         />
 
-        <SearchResults 
+        <ResultsArea 
           searchTerm={this.state.searchTerm} 
           updateHistoryState={this.updateHistoryState} 
-        />
-
+        />        
+        
       </div>
     )
   }

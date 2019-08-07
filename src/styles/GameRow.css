@@ -1,17 +1,35 @@
-li:nth-child(odd) {
-  background: #f7f7f7;
-}
-
 .row-container {
+  border-bottom: 1px solid lightgrey;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .row-container img {
-  width: 30%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 3%;
+  margin-right: 3%;
+  flex-basis: 25%;
+  border-radius: 10px;
 }
 
 .row-content {
-  padding-left: 2%;
-  width: 65%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  flex-basis: 66%;
+}
+
+.row-content p {
+  font-size: 11pt;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.row-content button {
+  
+  border-radius: 15px;
+}
+
+.row-content button:hover {
+  background-color: red;
 }

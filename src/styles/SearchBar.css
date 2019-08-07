@@ -5,9 +5,57 @@
   padding-bottom: 8px;
 }
 
+.search-button {
+  width: 40px;
+  
+}
+
+#invalid-search-button {
+  background-color: lightgray;
+  cursor: initial;
+}
+
+#valid-search-button {
+  background-color: darkred;
+  transition: 0.25s;
+}
+
+#valid-search-button:hover {
+  background-color: red;
+}
+
 #search-field {
-  width: calc(100% - 42.5px - 85px);
+  width: calc(100% - 40px - 40px);
   padding-left: 20px;
   padding-right: 20px;
-  border:  none;  
+  border: none;
+}
+
+#magnifying-glass {
+  font-size: 1em; /* This controls the size. */
+  display: inline-block;
+  width: 0.4em;
+  height: 0.4em;
+  border: 0.1em solid white;
+  position: relative;
+  bottom: 2px;
+  right: 1px;
+  border-radius: 0.35em;
+}
+
+#magnifying-glass::before {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  right: -0.27em;
+  bottom: -0.12em;
+  border-width: 0;
+  background: white;
+  width: 0.35em;
+  height: 0.08em;  
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
 }

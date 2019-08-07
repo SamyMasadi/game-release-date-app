@@ -5,7 +5,7 @@ function Header(props) {
 
   return (
     <div id="header-container">
-      <div><b>Video Game Search</b></div>
+        <h1>Video Game Search</h1>
     </div>
   )
 

@@ -7,10 +7,10 @@ function GameRow(props) {
     <li className="row-container">
       <img alt="cover" src={props.game.image.thumb_url}/>
       <div className="row-content">
-        <b>{props.game.name}</b>
+        <h4>{props.game.name}</h4>
         <p>{props.game.deck}</p>
         <a href={props.game.site_detail_url}>
-          <button>More info</button>
+          <button><b>More info</b></button>
         </a>
       </div>
     </li>

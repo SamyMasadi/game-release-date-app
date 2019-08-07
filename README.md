@@ -30,7 +30,8 @@ npm install
 ```
 cd <app directory>
 npm run build
-node ./src/server.js
+cd ./src
+node server.js
 ```
 Load localhost:8080 in a web browser.
 

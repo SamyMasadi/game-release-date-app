@@ -2,6 +2,9 @@
   background-color: #000;
   display: block;
   color: #fff;
-  font-size: 24pt;
+  text-align: center;
+}
+
+#header-container h1 {
   padding: 20px;
 }

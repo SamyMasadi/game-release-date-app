@@ -3,5 +3,17 @@
 }
 
 button {
+  background-color: darkred;  
+  border: none;
+  color: white;
   cursor: pointer;
+  padding: 5px 10px 5px 10px;
+  transition: 0.125s;
+}
+
+@media only screen and (min-width: 512px) {
+  .App {
+    margin: 0 auto;
+    width: 512px;
+  }
 }
