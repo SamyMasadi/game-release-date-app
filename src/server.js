@@ -14,31 +14,38 @@ const gbApiUrlWithoutQuery = "https://www.giantbomb.com/api/search/?api_key=" + 
 // app.use(bodyParser.urlencoded({extended:false}))
 
 app.listen(process.env.PORT || 8080, () => {
-    console.log('Server started on port 8080')
+  console.log('Server started on port 8080')
 })
 
 app.get('/', (request, response) => {
-    response.sendFile('index.html', { root: '../build' })
+  response.sendFile('index.html', { root: '../build' })
 })
 
 app.get('/search', (request, response) => {
-    response.redirect('/')
+  response.redirect('/')
 })
 
+// Sends same page, but allows the url to reflect a search term.
 app.get('/search/*', (request, response) => {
 	console.log("sending page with search term")
 	response.sendFile('index.html', { root: '../build' })
 })
 
+/*
+	Middleware needed to make search requests to Giant Bomb's API,
+	and pass along the results back to the client.
+	CORS restrictions on browsers prevent the client from contacting
+	Giant Bomb's API directly. It also keeps the API key on the server side.
+*/
 app.get('/api/:query', (request, response) => {
 	const query = request.params.query
-    const giantBombAPIURL = gbApiUrlWithoutQuery + query
-    axios.get(giantBombAPIURL)
-		.then(apiResponse => {
-			console.log("Fetched results for " + query)
-			response.send(apiResponse.data.results)
-		})
-		.catch(error => {
-			console.log(error)
-		})
+  const giantBombAPIURL = gbApiUrlWithoutQuery + query
+  axios.get(giantBombAPIURL)
+  .then(apiResponse => {
+    console.log("Fetched results for " + query)
+    response.send(apiResponse.data.results)
+  })
+  .catch(error => {
+    console.log(error)
+  })
 })

@@ -25,7 +25,13 @@ class ResultsArea extends React.Component {
       this.setState({ resultsArea: results })
     }
   }
-    
+  
+  /**
+   * When the user submits a new search, make a request to the app server
+   * to initiate a search using Giant Bomb's API. Upon receiving results,
+   * render results info and update state.
+   * @param {string} searchTerm a user-submitted search term
+   */
   performSearch(searchTerm) {
     console.log("Searching: " + searchTerm)
     const queryURL = "/api/" + searchTerm

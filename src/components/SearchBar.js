@@ -15,6 +15,7 @@ class SearchBar extends React.Component {
   componentDidUpdate(prevProps) {
     let searchValue = this.props.searchBarValue
     let prevSearchValue = prevProps.searchBarValue
+    // To ensure whitespace doesn't count as valid input.
     searchValue = searchValue.trim()
     prevSearchValue = prevSearchValue.trim()
     if (searchValue.length > 0 && prevSearchValue.length === 0) {
@@ -35,7 +36,7 @@ class SearchBar extends React.Component {
           value={this.props.searchBarValue} 
           onChange={this.props.handleSearchValueChange} 
           placeholder="Search games" 
-          required minLength="1"
+          required
         />
         <button className="search-bar search-button" id={this.state.searchButtonID} type="submit">
           <div id="magnifying-glass"></div>

@@ -16,6 +16,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    // User can initiate a search by visiting '/search/:term' directly
     const initialSearchTerm = this.getSearchTermFromURL()
     if (initialSearchTerm) {
       this.updateHistoryState(initialSearchTerm, null)
@@ -24,6 +25,8 @@ class App extends React.Component {
     else {
       this.updateHistoryState("", [])
     }
+
+    // Update state based on history events because client doesn't reload or redirect.
     window.onpopstate = (event) => {
       this.setState({
         searchBarValue: event.state.searchTerm,
@@ -32,6 +35,11 @@ class App extends React.Component {
     }
   }
 
+  /**
+   * In case the user directly visits '/search/:term',
+   * the method will parse the url for the search term.
+   * @return the search term as a string or null
+   */
   getSearchTermFromURL() {
     const url = window.location.href
     const searchMarker = "search/"
@@ -44,10 +52,18 @@ class App extends React.Component {
     return searchTerm
   }
 
+  /**
+   * Manages the state of the search bar value as the user makes changes to the input.
+   * @param {Event} event an input change event
+   */
   handleSearchValueChange(event) {
     this.setState({ searchBarValue: event.target.value })
   }
 
+  /**
+   * Control form submits and ensure user doesn't submit empty strings or whitespace.
+   * @param {Event} event a form submit event
+   */
   handleSearchSubmit(event) {
     event.preventDefault()
     let newSearch = this.state.searchBarValue
@@ -59,6 +75,10 @@ class App extends React.Component {
     this.setState({ searchTerm: newSearch })
   }
 
+  /**
+   * Update url and history state with each search.
+   * @param {string} newSearch a user-submitted search term
+   */
   pushHistoryState(newSearch) {
     let newState = { searchTerm: newSearch }
     if (newSearch === this.state.searchTerm) {
@@ -68,6 +88,11 @@ class App extends React.Component {
     window.history.pushState(newState, newSearch, newURL)
   }
 
+  /**
+   * Update history state to include API results
+   * @param {string} searchTerm a user-submitted search term
+   * @param gamesJSON API results for the search query
+   */
   updateHistoryState(searchTerm, gamesJSON) {
     window.history.replaceState(
       {
