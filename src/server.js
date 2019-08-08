@@ -47,5 +47,6 @@ app.get('/api/:query', (request, response) => {
   })
   .catch(error => {
     console.log(error)
+    response.end()
   })
 })

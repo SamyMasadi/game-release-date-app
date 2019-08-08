@@ -7,7 +7,6 @@ button {
   border: none;
   color: white;
   cursor: pointer;
-  padding: 5px 10px 5px 10px;
   transition: 0.125s;
 }
 
@@ -15,5 +14,11 @@ button {
   .App {
     margin: 0 auto;
     width: 512px;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .App {
+    width: 768px;
   }
 }

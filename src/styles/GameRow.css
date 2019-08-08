@@ -20,16 +20,28 @@
 }
 
 .row-content p {
-  font-size: 11pt;
+  font-size: 10pt;
   margin-top: 5px;
   margin-bottom: 10px;
 }
 
 .row-content button {
-  
+  padding: 5px 10px 5px 10px;
   border-radius: 15px;
 }
 
 .row-content button:hover {
   background-color: red;
+}
+
+@media only screen and (min-width: 512px) {
+  .row-content p {
+    font-size: 11pt;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .row-content p {
+    font-size: 12pt;
+  }
 }
