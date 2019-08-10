@@ -7,7 +7,9 @@ import '../styles/LoadingSpinner.css'
 
 function LoadingSpinner(props) {
   return (
-    <div className="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+    <div className="spinner-container">
+      <div className="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+    </div>
   )
 }
 

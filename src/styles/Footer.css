@@ -1,0 +1,46 @@
+#footer-container {
+  background-color: #000;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+#search-source {
+  margin-left: 20px;
+}
+
+#search-source a:link {
+  color: red;
+}
+
+#search-source a:visited {
+  color: darkred;
+}
+
+#copyright {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+@media only screen and (min-height: 313px) {
+  .fixed-footer {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+  }
+
+  @media only screen and (min-width: 512px) {
+    .fixed-footer {
+      width: 512px;
+    }
+  }
+
+  @media only screen and (min-width: 1024px) {
+    .fixed-footer {
+      width: 768px;
+    }
+  }
+}

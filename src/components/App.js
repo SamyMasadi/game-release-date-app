@@ -2,37 +2,82 @@ import React from 'react'
 import '../styles/App.css'
 import Header from './Header.js'
 import SearchBar from './SearchBar.js'
-import ResultsArea from './ResultsArea.js'
+import Prompt from './Prompt.js'
+import SearchResults from './SearchResults.js'
+import LoadingSpinner from './LoadingSpinner.js'
+import Footer from './Footer.js'
+
+const defaultState = {
+  searchTerm: "",
+  searchBarValue: "",
+  resultsArea: <Prompt/>,
+  fixedFooter: true
+}
 
 class App extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = { searchBarValue: "" }
+    this.state = defaultState
 
+    this.handleHistoryEvent = this.handleHistoryEvent.bind(this)
     this.handleSearchValueChange = this.handleSearchValueChange.bind(this)
     this.handleSearchSubmit = this.handleSearchSubmit.bind(this)
     this.pushHistoryState = this.pushHistoryState.bind(this)
+    this.performSearch = this.performSearch.bind(this)
   }
 
   componentDidMount() {
+    // Update state based on history events because client doesn't reload or redirect.
+    window.onpopstate = (event) => {
+      if (this.state.searchTerm === event.state.searchTerm) {
+        console.log("Entering here?")
+        return
+      }
+      this.handleHistoryEvent(event.state)
+    }
+
+    // Need a case for user leaving to another site and returning
+    if (window.history.state) {
+      this.handleHistoryEvent(window.history.state)
+      const results = window.history.state.results
+      if (results && results.length > 0) return
+    }
+    
     // User can initiate a search by visiting '/search/:term' directly
     const initialSearchTerm = this.getSearchTermFromURL()
     if (initialSearchTerm) {
-      this.updateHistoryState(initialSearchTerm, null)
-      this.setState({ searchTerm: initialSearchTerm })
+      this.performSearch(initialSearchTerm)
+      return
     }
-    else {
-      this.updateHistoryState("", [])
-    }
+    
+    this.updateHistoryState("", [])
+  }
 
-    // Update state based on history events because client doesn't reload or redirect.
-    window.onpopstate = (event) => {
-      this.setState({
-        searchBarValue: event.state.searchTerm,
-        searchTerm: event.state.searchTerm
-      })
-    }
+  /**
+   * Updates the page state based on the info stored in history states.
+   * @param state an HTML5 history api state
+   */
+  handleHistoryEvent(state) {
+    const searchTerm = state.searchTerm
+    const results = state.results
+    if (searchTerm && searchTerm !== "") {
+      if (results && results.length > 0) {
+        this.setState({
+          searchTerm: searchTerm,
+          searchBarValue: searchTerm,
+          resultsArea: <SearchResults gamesJSON={results}/>,
+          fixedFooter: false
+        })        
+      }
+      else {
+        /* There may be cases where user initiated a search,
+        but navigated away before API response could be saved in history state. */
+        this.performSearch(searchTerm)
+      }
+      return
+    }    
+    this.setState(defaultState)
   }
 
   /**
@@ -72,7 +117,40 @@ class App extends React.Component {
     }
     newSearch = newSearch.trim()    
     this.pushHistoryState(newSearch)
-    this.setState({ searchTerm: newSearch })
+    if (newSearch !== this.state.searchTerm) {
+      this.performSearch(newSearch)
+    }    
+  }
+
+  /**
+   * When the user submits a new search, make a request to the app server
+   * to initiate a search using Giant Bomb's API. Upon receiving results,
+   * render results info and update state.
+   * @param {string} searchTerm a user-submitted search term
+   */
+  performSearch(searchTerm) {
+    this.setState({
+      resultsArea: <LoadingSpinner/>,
+      fixedFooter: true
+    })
+    console.log("Searching: " + searchTerm)
+    const queryURL = "/api/" + searchTerm
+    fetch(queryURL)
+      .then(response => {
+        return response.json()
+      })
+      .then(resultsJSON => {
+        this.updateHistoryState(searchTerm, resultsJSON)
+        const results = <SearchResults gamesJSON={resultsJSON}/>
+        this.setState({
+          searchTerm: searchTerm,
+          resultsArea: results,
+          fixedFooter: false
+        })
+      })
+      .catch(() => {
+        alert('The search failed. Please try again.')
+      })
   }
 
   /**
@@ -115,10 +193,9 @@ class App extends React.Component {
           handleSearchValueChange={this.handleSearchValueChange} 
         />
 
-        <ResultsArea 
-          searchTerm={this.state.searchTerm} 
-          updateHistoryState={this.updateHistoryState} 
-        />        
+        {this.state.resultsArea}
+
+        <Footer fixedFooter={this.state.fixedFooter}/>
         
       </div>
     )
