@@ -7,7 +7,11 @@ const axios = require('axios')
 app.use(express.static('../build'))
 const myKey = require('./myKey.json')
 
-const gbApiUrlWithoutQuery = "https://www.giantbomb.com/api/search/?api_key=" + myKey.apiKey + "&resources=game&format=json&query="
+const gbApiUrlWithoutQuery = (
+  "https://www.giantbomb.com/api/search/?api_key=" + myKey.apiKey 
+  + "&field_list=image,name,deck,site_detail_url,expected_release_day,expected_release_month,expected_release_year"
+  + "&resources=game&format=json&query="  // append query here when received from the user
+)
 
 // Body Parser middleware
 // app.use(bodyParser.json())
