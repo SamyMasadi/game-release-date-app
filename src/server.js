@@ -1,15 +1,19 @@
 const express = require('express')
 const app = express()
 const axios = require('axios')
+const myKey = require('./myKey.json')
 // const bodyParser = require('body-parser')
 //const path = require('path')
 
-app.use(express.static('../build'))
-const myKey = require('./myKey.json')
+/* 
+  Paths used by app should be relative to the project directory, 
+  as this is where `node ./src/server.js` is executed 
+*/
+app.use(express.static('./build'))
 
 const gbApiUrlWithoutQuery = (
   "https://www.giantbomb.com/api/search/?api_key=" + myKey.apiKey 
-  + "&field_list=image,name,deck,site_detail_url,expected_release_day,expected_release_month,expected_release_year"
+  + "&field_list=id,image,name,deck,site_detail_url,expected_release_day,expected_release_month,expected_release_year"
   + "&resources=game&format=json&query="  // append query here when received from the user
 )
 
@@ -22,7 +26,7 @@ app.listen(process.env.PORT || 8080, () => {
 })
 
 app.get('/', (request, response) => {
-  response.sendFile('index.html', { root: '../build' })
+  response.sendFile('index.html', { root: './build' })
 })
 
 app.get('/search', (request, response) => {
@@ -32,7 +36,7 @@ app.get('/search', (request, response) => {
 // Sends same page, but allows the url to reflect a search term.
 app.get('/search/*', (request, response) => {
 	console.log("sending page with search term")
-	response.sendFile('index.html', { root: '../build' })
+	response.sendFile('index.html', { root: './build' })
 })
 
 /*
