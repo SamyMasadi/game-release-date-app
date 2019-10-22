@@ -1,15 +1,10 @@
 const express = require('express')
 const app = express()
 const axios = require('axios')
-const myKey = require('./myKey.json')
-// const bodyParser = require('body-parser')
-//const path = require('path')
+const myKey = require('./config/myKey.json')
+const path = require('path')
 
-/* 
-  Paths used by app should be relative to the project directory, 
-  as this is where `node ./src/server.js` is executed 
-*/
-app.use(express.static('./build'))
+app.use(express.static('./client/build'))
 
 const gbApiUrlWithoutQuery = (
   "https://www.giantbomb.com/api/search/?api_key=" + myKey.apiKey 
@@ -18,15 +13,10 @@ const gbApiUrlWithoutQuery = (
 )
 
 // Body Parser middleware
-// app.use(bodyParser.json())
-// app.use(bodyParser.urlencoded({extended:false}))
-
-app.listen(process.env.PORT || 8080, () => {
-  console.log('Server started on port 8080')
-})
+// app.use(express.json())
 
 app.get('/', (request, response) => {
-  response.sendFile('index.html', { root: './build' })
+  response.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
 })
 
 app.get('/search', (request, response) => {
@@ -35,8 +25,7 @@ app.get('/search', (request, response) => {
 
 // Sends same page, but allows the url to reflect a search term.
 app.get('/search/*', (request, response) => {
-	console.log("sending page with search term")
-	response.sendFile('index.html', { root: './build' })
+	response.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
 })
 
 /*
@@ -57,4 +46,8 @@ app.get('/api/:query', (request, response) => {
     console.log(error)
     response.end()
   })
+})
+
+app.listen(process.env.PORT || 8080, () => {
+  console.log('Server started on port 8080')
 })
