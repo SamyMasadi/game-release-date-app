@@ -11,26 +11,27 @@ Node.js: https://nodejs.org/en/
 ## Initial Setup
 
 1. Get a free API key from GiantBomb.com: https://www.giantbomb.com/api/
-2. Add your key to ./src/myKey.json
+2. Add your key to ./config/myKey.json
 ```
 {
     "apiKey": "Your Key Here"
 }
 ```
-Note: The API key is only loaded by the Express Node server, so it should not be bundled into client pages by Webpack.<br>
+Note: The API key is only loaded by the Express Node server, so it should not be bundled into client pages by the React build script.<br>
 
-3. Run npm install in the app directory to set up node modules list in package.json
+3. Install package dependencies for both the server and client.
 ```
 cd <app directory>
 npm install
+npm run client-install
 ```
 
 ## How to Run
 
 ```
 cd <app directory>
-npm run build
-node ./src/server.js
+npm run client-build
+npm start
 ```
 Load localhost:8080 in a web browser.
 
