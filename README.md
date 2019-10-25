@@ -11,10 +11,10 @@ Node.js: https://nodejs.org/en/
 ## Initial Setup
 
 1. Get a free API key from GiantBomb.com: https://www.giantbomb.com/api/
-2. Add your key to ./config/myKey.json
+2. Add your key to ./config/keys.json
 ```
 {
-    "apiKey": "Your Key Here"
+    "api": "Your Key Here"
 }
 ```
 Note: The API key is only loaded by the Express Node server, so it should not be bundled into client pages by the React build script.<br>
