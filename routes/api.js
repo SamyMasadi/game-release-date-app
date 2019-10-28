@@ -1,7 +1,9 @@
 const express = require('express')
 const router = express.Router()
 const axios = require('axios')
+
 const keys = require('../config/keys.json')
+const { wrapAsync } = require('../middleware/functions')
 
 const gbApiUrlWithoutQuery = (
   "https://www.giantbomb.com/api/search/?api_key=" + keys.api 
@@ -17,18 +19,13 @@ const gbApiUrlWithoutQuery = (
  * @route GET api/:query
  * @access Public
  */	
-router.get('/:query', (request, response) => {
+router.get('/:query', wrapAsync(async (request, response) => {
 	const query = request.params.query
   const giantBombAPIURL = gbApiUrlWithoutQuery + query
-  axios.get(giantBombAPIURL)
-  .then(apiResponse => {
-    console.log("Fetched results for " + query)
-    response.send(apiResponse.data.results)
-  })
-  .catch(error => {
-    console.log(error)
-    response.status(502).json({ success: false })
-  })
-})
+
+  const apiResponse = await axios.get(giantBombAPIURL)
+  console.log("Fetched results for " + query)
+  response.send(apiResponse.data.results)
+}))
 
 module.exports = router
