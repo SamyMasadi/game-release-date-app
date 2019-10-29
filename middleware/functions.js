@@ -17,8 +17,8 @@ function wrapAsync(fn) {
 
 /**
  * Queries the database for an existing user.
- * @param {string} email 
- * @param {string} password 
+ * @param {string} email The user's email
+ * @param {string} password The user's password
  * @return The queried user object
  */
 async function checkUser(email, password) {  
@@ -33,9 +33,21 @@ async function checkUser(email, password) {
 }
 
 /**
+ * Queries the database for an existing user.
+ * @param {string} id The user's id
+ * @return The queried user object
+ */
+async function getUserByID(id) { 
+  const query = 'SELECT uid, email, register_date FROM user WHERE uid = ?'
+  const [rows, fields] = await dbPool.query(query, id)
+
+  return rows[0]
+}
+
+/**
  * Adds a new user to the database then responds with a JSON web token.
- * @param {string} email 
- * @param {string} password 
+ * @param {string} email The user's email
+ * @param {string} password The user's password
  * @return An object containing a JSON web token and the user's id
  */
 async function registerUser(email, password) {
@@ -46,19 +58,18 @@ async function registerUser(email, password) {
   const query = 'INSERT INTO user (email, password) VALUES (?, ?)'
   const [response, fields] = await dbPool.query(query, [email, hash])
   
-  let result = {
-    token: null,
-    id: null
+  const token = jwt.sign({ id: response.insertId }, keys.jwtSecret, { expiresIn: 3600 })
+
+  return { 
+    token: token,
+    id: response.insertId
   }
-  result.token = jwt.sign({ id: response.insertId }, keys.jwtSecret, { expiresIn: 3600 })
-  result.id = response.insertId
-  return result
 }
 
 /**
  * Checks the user's password then responds with a JSON web token.
- * @param {Object} user 
- * @param {string} unhashedPassword 
+ * @param {Object} user The user object returned from the database
+ * @param {string} unhashedPassword The password submitted by the user
  * @return A JSON web token
  */
 async function authenticateUser(user, unhashedPassword) {
@@ -74,6 +85,7 @@ async function authenticateUser(user, unhashedPassword) {
 module.exports = {
   wrapAsync,
   checkUser,
+  getUserByID,
   registerUser,
   authenticateUser
 }

@@ -1,7 +1,8 @@
 const express = require('express')
 const router = express.Router()
 
-const { wrapAsync, checkUser, authenticateUser } = require('../middleware/functions')
+const { wrapAsync, checkUser, getUserByID, authenticateUser } = require('../middleware/functions')
+const auth = require('../middleware/auth')
 
 /**
  * @route POST /auth
@@ -23,6 +24,16 @@ router.post('/', wrapAsync(async (request, response) => {
       email: user.email
     }
   })
+}))
+
+/**
+ * @route GET /auth/user
+ * @desc Get user data
+ * @access Private
+ */
+router.get('/user', auth, wrapAsync(async (request, response) => {
+  const user = await getUserByID(request.user.id)
+  response.json(user)
 }))
 
 module.exports = router;

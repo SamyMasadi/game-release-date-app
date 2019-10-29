@@ -1,4 +1,5 @@
 const BAD_REQUEST = 400
+const UNAUTHORIZED = 401
 const INTERNAL_SERVER_ERROR = 500
 const SERVICE_UNAVAILABLE = 503
 
@@ -23,6 +24,14 @@ function clientErrorHandler(err, req, res, next) {
   if (err.message === 'invalidCredentialsError') {
     return res.status(BAD_REQUEST).json({ message: 'Invalid credentials.' })
   }
+
+  if (err.message === 'noTokenError') {
+    return res.status(UNAUTHORIZED).json({ message: 'No token, authorization denied.' })
+  }
+
+  if (err.name === 'JsonWebTokenError') {
+    return res.status(BAD_REQUEST).json({ message: 'Token is not valid.' })
+  }  
 
   next(err)
 }
