@@ -1,11 +1,11 @@
 import React from 'react'
-import '../styles/App.css'
-import Header from './Header.js'
-import SearchBar from './SearchBar.js'
-import Prompt from './Prompt.js'
-import SearchResults from './SearchResults.js'
-import LoadingSpinner from './LoadingSpinner.js'
-import Footer from './Footer.js'
+import './App.css'
+import Header from './header/Header'
+import SearchBar from './search-bar/SearchBar'
+import Prompt from './prompt/Prompt'
+import SearchResults from './search-results/SearchResults'
+import LoadingSpinner from './loading-spinner/LoadingSpinner'
+import Footer from './footer/Footer'
 
 const defaultState = {
   searchTerm: "",
@@ -31,7 +31,6 @@ class App extends React.Component {
     // Update state based on history events because client doesn't reload or redirect.
     window.onpopstate = (event) => {
       if (this.state.searchTerm === event.state.searchTerm) {
-        console.log("Entering here?")
         return
       }
       this.handleHistoryEvent(event.state)

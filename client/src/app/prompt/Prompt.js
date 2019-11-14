@@ -1,5 +1,5 @@
 import React from 'react'
-import '../styles/Prompt.css'
+import './Prompt.css'
 
 function Prompt(props) {
     return (

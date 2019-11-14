@@ -1,6 +1,6 @@
 import React from 'react'
-import GameRow from './GameRow.js'
-import '../styles/SearchResults.css'
+import GameRow from '../gamerow/GameRow'
+import './SearchResults.css'
 
 function SearchResults(props) {
 
