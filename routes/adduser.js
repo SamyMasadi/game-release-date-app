@@ -4,7 +4,7 @@ const router = express.Router()
 const { wrapAsync, checkUser, registerUser } = require('../middleware/functions')
 
 /**
- * @route POST /register
+ * @route POST /adduser
  * @desc Register new user
  * @access Public
  */
