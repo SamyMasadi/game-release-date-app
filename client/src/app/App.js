@@ -37,12 +37,14 @@ class App extends React.Component {
 
         <Router>
           <Switch>
-            <Route path="/login">
-              <Login />
-            </Route>
-            <Route path="/register">
-              <Register />
-            </Route>
+            <Route 
+              path="/login"
+              render={props => <Login storeUserData={this.storeUserData} loggedIn={this.state.token} {...props} />}
+            />
+            <Route 
+              path="/register"
+              render={props => <Register storeUserData={this.storeUserData} loggedIn={this.state.token} {...props} />}
+            />
             <Route 
               exact path="/search/:term"
               render={props => <Search setFixedFooter={this.setFixedFooter} {...props} />}
