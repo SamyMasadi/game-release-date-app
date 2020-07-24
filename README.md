@@ -23,7 +23,7 @@ Note: The API key is only loaded by the Express Node server, so it should not be
 ```
 cd <app directory>
 npm install
-npm run client-install
+cd client && npm install
 ```
 
 ## How to Run
