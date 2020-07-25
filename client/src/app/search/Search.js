@@ -18,6 +18,7 @@ class Search extends React.Component {
     this.handleHistoryEvent = this.handleHistoryEvent.bind(this)
     this.handleSearchValueChange = this.handleSearchValueChange.bind(this)
     this.performSearch = this.performSearch.bind(this)
+    this.searchError = this.searchError.bind(this)
     this.updateHistoryState = this.updateHistoryState.bind(this)
   }
 
@@ -95,18 +96,21 @@ class Search extends React.Component {
     try {
       const response = await fetch(queryURL)
       resultsJSON = await response.json()
+    } catch (error) {
+      return this.searchError()
     }
-    catch (error) {
-      this.props.setFixedFooter(true)
-      this.setState({ 
-        resultsArea: 'The search failed. Please try again.'
-      })
-      return
-    }
+    if (resultsJSON.message) { return this.searchError() }
     this.updateHistoryState(searchTerm, resultsJSON)
     this.props.setFixedFooter(false)
     const results = <SearchResults gamesJSON={resultsJSON}/>
     this.setState({ resultsArea: results })
+  }
+
+  searchError() {
+    this.props.setFixedFooter(true)
+    this.setState({ 
+      resultsArea: 'The search failed. Please try again.'
+    })
   }
 
   /**
