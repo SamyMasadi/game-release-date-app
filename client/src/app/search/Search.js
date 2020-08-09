@@ -1,6 +1,7 @@
 import React from 'react'
 import SearchBar from '../search-bar/SearchBar'
 import Prompt from '../prompt/Prompt'
+import Message from '../message/Message'
 import SearchResults from '../search-results/SearchResults'
 import LoadingSpinner from '../loading-spinner/LoadingSpinner'
 
@@ -108,9 +109,8 @@ class Search extends React.Component {
 
   searchError() {
     this.props.setFixedFooter(true)
-    this.setState({ 
-      resultsArea: 'The search failed. Please try again.'
-    })
+    const error = <Message message='The search failed. Please try again.' messageClass='errorAlert' />
+    this.setState({ resultsArea: error })
   }
 
   /**

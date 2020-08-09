@@ -1,6 +1,7 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import './Register.css'
+import Message from '../message/Message'
 
 class Register extends React.Component {
 
@@ -17,6 +18,7 @@ class Register extends React.Component {
     this.handleInputValueChange = this.handleInputValueChange.bind(this)
     this.handleFormSubmit = this.handleFormSubmit.bind(this)
     this.validateForm = this.validateForm.bind(this)
+    this.registrationError = this.registrationError.bind(this)
   }
 
   handleInputValueChange(event) {
@@ -27,31 +29,23 @@ class Register extends React.Component {
     event.preventDefault()
 
     const cleanForm = this.validateForm()
+    if (cleanForm.error) { return this.registrationError(cleanForm.error) }
 
-    if (cleanForm.error) {
-      this.setState({
-        message: cleanForm.error,
-        messageClass: 'errorAlert'
+    let responseJSON
+    try {
+      const response = await fetch('/adduser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(cleanForm)
       })
-      return
+      responseJSON = await response.json()
+    } catch (error) {
+      const message = 'Registration failed. Please try again.'
+      return this.registrationError(message)
     }
-
-    const response = await fetch('/adduser', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(cleanForm)
-    })
-    const responseJSON = await response.json()
-    
-    if (responseJSON.message) {
-      this.setState({
-        message: responseJSON.message,
-        messageClass: 'errorAlert'
-      })
-      return
-    }
+    if (responseJSON.message) { return this.registrationError(responseJSON.message) }
 
     this.props.storeUserData(responseJSON.token, responseJSON.user)
   }
@@ -74,6 +68,13 @@ class Register extends React.Component {
       email: email.trim(),
       password: password.trim()
     }
+  }
+
+  registrationError(message) {
+    this.setState({
+      message: message,
+      messageClass: 'errorAlert'
+    })
   }
     
   render() {
@@ -107,9 +108,7 @@ class Register extends React.Component {
           />
           <button className="credentials-form form-button" type="submit">Register</button>
         </form>
-        <div className={this.state.messageClass}>
-          {this.state.message}
-        </div>
+        <Message messageClass={this.state.messageClass} message={this.state.message} />
       </div>
     )
   }

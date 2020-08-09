@@ -24,18 +24,3 @@
 .form-button:hover {
   background-color: red;
 }
-
-.errorAlert {
-  width: 100%;
-  margin-top: 8px;
-  margin-bottom: 8px;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  background-color: pink;
-  color: red;
-  text-align: center;
-}
-
-.hidden {
-  display: none;
-}

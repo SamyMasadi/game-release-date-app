@@ -1,6 +1,7 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import './Login.css'
+import Message from '../message/Message'
 
 class Login extends React.Component {
 
@@ -9,12 +10,14 @@ class Login extends React.Component {
     this.state = {
       email: '',
       password: '',
-      message: ''
+      message: '',
+      messageClass: 'hidden'
     }
 
     this.handleInputValueChange = this.handleInputValueChange.bind(this)
     this.handleFormSubmit = this.handleFormSubmit.bind(this)
     this.validateForm = this.validateForm.bind(this)
+    this.loginError = this.loginError.bind(this)
   }
 
   handleInputValueChange(event) {
@@ -25,28 +28,23 @@ class Login extends React.Component {
     event.preventDefault()
 
     const cleanForm = this.validateForm()
+    if (cleanForm.error) { return this.loginError(cleanForm.error) }
 
-    if (cleanForm.error) {
-      this.setState({ message: cleanForm.error })
-      return
-    }
-
-    const response = await fetch('/auth', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(cleanForm)
-    })
-    const responseJSON = await response.json()
-    
-    if (responseJSON.message) {
-      this.setState({
-        message: responseJSON.message,
-        messageClass: 'errorAlert'
+    let responseJSON
+    try {
+      const response = await fetch('/auth', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(cleanForm)
       })
-      return
+      responseJSON = await response.json()
+    } catch (error) {
+      const message = 'Log in failed. Please try again.'
+      return this.loginError(message)
     }
+    if (responseJSON.message) { return this.loginError(responseJSON.message) }
 
     this.props.storeUserData(responseJSON.token, responseJSON.user)
   }
@@ -65,6 +63,13 @@ class Login extends React.Component {
       email: email.trim(),
       password: password.trim()
     }
+  }
+
+  loginError(message) {
+    this.setState({
+      message: message,
+      messageClass: 'errorAlert'
+    })
   }
     
   render() {
@@ -92,9 +97,7 @@ class Login extends React.Component {
           />
           <button className="credentials-form form-button" type="submit">Log In</button>
         </form>
-        <div className={this.state.messageClass}>
-          {this.state.message}
-        </div>
+        <Message messageClass={this.state.messageClass} message={this.state.message} />
       </div>
     )
   }
