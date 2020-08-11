@@ -74,7 +74,7 @@ class Search extends React.Component {
 
   /**
    * Manages the state of the search bar value as the user makes changes to the input.
-   * @param {Event} event an input change event
+   * @param event an input change event
    */
   handleSearchValueChange(event) {
     this.setState({ searchBarValue: event.target.value })
@@ -84,7 +84,7 @@ class Search extends React.Component {
    * When the user submits a new search, make a request to the app server
    * to initiate a search using Giant Bomb's API. Upon receiving results,
    * render results info and update state.
-   * @param {string} searchTerm a user-submitted search term
+   * @param searchTerm a user-submitted search term
    */
   async performSearch(searchTerm) {
     this.props.setFixedFooter(true)
@@ -115,7 +115,7 @@ class Search extends React.Component {
 
   /**
    * Update history state to include API results
-   * @param {string} searchTerm a user-submitted search term
+   * @param searchTerm a user-submitted search term
    * @param gamesJSON API results for the search query
    */
   updateHistoryState(searchTerm, gamesJSON) {

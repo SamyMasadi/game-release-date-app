@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
 
-const { wrapAsync, checkUser, getUserByID, authenticateUser } = require('../middleware/functions')
-const auth = require('../middleware/auth')
+const { wrapAsync, checkAuth, authenticateUser } = require('../middleware/functions')
+const { checkUser, getUserByID } = require('../middleware/queries')
 
 /**
  * @route POST /auth
@@ -31,7 +31,7 @@ router.post('/', wrapAsync(async (request, response) => {
  * @desc Get user data
  * @access Private
  */
-router.get('/user', auth, wrapAsync(async (request, response) => {
+router.get('/user', checkAuth, wrapAsync(async (request, response) => {
   const user = await getUserByID(request.user.id)
   response.json(user)
 }))

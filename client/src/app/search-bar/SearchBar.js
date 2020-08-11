@@ -38,7 +38,7 @@ class SearchBar extends React.Component {
 
   /**
    * Control form submits and ensure user doesn't submit empty strings or whitespace.
-   * @param {Event} event a form submit event
+   * @param event a form submit event
    */
   handleSearchSubmit(event) {
     event.preventDefault()
@@ -52,7 +52,7 @@ class SearchBar extends React.Component {
 
   /**
    * Update url and history state with each search.
-   * @param {string} newSearch a user-submitted search term
+   * @param newSearch a user-submitted search term
    */
   pushHistoryState(newSearch) {
     let newState = { searchTerm: newSearch }

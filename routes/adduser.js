@@ -1,7 +1,8 @@
 const express = require('express')
 const router = express.Router()
 
-const { wrapAsync, checkUser, registerUser } = require('../middleware/functions')
+const { wrapAsync } = require('../middleware/functions')
+const { checkUser, registerUser } = require('../middleware/queries')
 
 /**
  * @route POST /adduser
