@@ -31,7 +31,7 @@ router.post('/', wrapAsync(async (request, response) => {
  * @desc Get user data
  * @access Private
  */
-router.get('/user', checkAuth, wrapAsync(async (request, response) => {
+router.get('/user', wrapAsync(checkAuth), wrapAsync(async (request, response) => {
   const user = await getUserByID(request.user.id)
   response.json(user)
 }))
