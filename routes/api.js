@@ -12,9 +12,9 @@ const { wrapAsync, readConfig } = require('../middleware/functions')
  */	
 router.get('/:query', wrapAsync(async (request, response) => {
   const query = request.params.query
-  const keys = await readConfig('keys.json')
+  const { api } = await readConfig('keys.json')
   const giantBombAPIURL = (
-    'https://www.giantbomb.com/api/search/?api_key=' + keys.api 
+    'https://www.giantbomb.com/api/search/?api_key=' + api
     + '&field_list=id,image,name,deck,site_detail_url,expected_release_day,expected_release_month,expected_release_year'
     + '&resources=game&format=json'
     + '&query=' + query

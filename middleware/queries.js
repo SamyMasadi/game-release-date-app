@@ -1,11 +1,15 @@
+const mongoose = require('mongoose')
 
 const { readConfig } = require('../middleware/functions')
 
+const db = mongoose.connection
+db.once('open', () => { console.log('MongoDB connnected...') })
 connectDB().catch(error => console.error(error))
 
 async function connectDB() {
-  const dbConfig = await readConfig('database.json')
-  // To Do: connect database
+  const { host,user,password,database } = await readConfig('database.json')
+  const mongoURI = 'mongodb://'+user+':'+password+'@'+host+'/'+database
+  await mongoose.connect(mongoURI, {useNewUrlParser: true})
 }
 
 /**
