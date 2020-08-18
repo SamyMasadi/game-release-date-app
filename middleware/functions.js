@@ -17,9 +17,9 @@ async function checkAuth(request, response, next) {
   const token = request.header('x-auth-token')
   if (!token) throw new Error('noTokenError')
 
-  const keysFile = 'keys.json'
-  const keys = await readConfig(keysFile)
-  const decoded = jwt.verify(token, keys.jwtSecret)
+  const json = await fs.readFile('config/keys.json', 'utf-8')
+  const { jwtSecret } = JSON.parse(json)
+  const decoded = jwt.verify(token, jwtSecret)
   request.user = decoded
   next()
 }
@@ -36,25 +36,14 @@ async function authenticateUser(user, unhashedPassword) {
     throw new Error('invalidCredentialsError')
   }
   
-  const token = jwt.sign({ id: user.uid }, keys.jwtSecret, { expiresIn: 3600 })
+  const json = await fs.readFile('config/keys.json', 'utf-8')
+  const { jwtSecret } = JSON.parse(json)
+  const token = jwt.sign({ id: user._id }, jwtSecret, { expiresIn: 3600 })
   return token
-}
-
-/**
- * Asynchronously reads a JSON config file from /config/ and parses the JSON data.
- * @param {string} file The file name
- * @return An object from JSON
- */
-async function readConfig(file) {
-  const path = './config/' + file
-  const json = await fs.readFile(path, 'utf-8')
-  const jsonData = JSON.parse(json)
-  return jsonData
 }
 
 module.exports = {
   wrapAsync,
   checkAuth,
-  authenticateUser,
-  readConfig
+  authenticateUser
 }

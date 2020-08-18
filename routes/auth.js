@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
 
-const { wrapAsync, checkAuth, authenticateUser } = require('../middleware/functions')
-const { checkUser, getUserByID } = require('../middleware/queries')
+const { wrapAsync, authenticateUser } = require('../middleware/functions')
+const { checkUser } = require('../middleware/queries')
 
 /**
  * @route POST /auth
@@ -10,7 +10,8 @@ const { checkUser, getUserByID } = require('../middleware/queries')
  * @access Public
  */
 router.post('/', wrapAsync(async (request, response) => {
-  const { email, password } = request.body
+  let { email, password } = request.body
+  email = email.toLowerCase()
 
   const user = await checkUser(email, password)
   if (!user) throw new Error('invalidUserError')
@@ -20,20 +21,9 @@ router.post('/', wrapAsync(async (request, response) => {
   response.json({
     token: token,
     user: {
-      id: user.uid,
       email: user.email
     }
   })
-}))
-
-/**
- * @route GET /auth/user
- * @desc Get user data
- * @access Private
- */
-router.get('/user', wrapAsync(checkAuth), wrapAsync(async (request, response) => {
-  const user = await getUserByID(request.user.id)
-  response.json(user)
 }))
 
 module.exports = router;

@@ -13,7 +13,7 @@ app.use(express.json())
 //   Routes   //
 ////////////////
 app.use('/api', require('./routes/api'))
-app.use('/adduser', require('./routes/adduser'))
+app.use('/user', require('./routes/user'))
 app.use('/auth', require('./routes/auth'))
 
 app.get('/*', (request, response) => {

@@ -1,8 +1,9 @@
 const express = require('express')
 const router = express.Router()
 const axios = require('axios')
+const fs = require('fs').promises
 
-const { wrapAsync, readConfig } = require('../middleware/functions')
+const { wrapAsync } = require('../middleware/functions')
 
 /**
  * Middleware needed to make search requests to Giant Bomb's API,
@@ -12,7 +13,8 @@ const { wrapAsync, readConfig } = require('../middleware/functions')
  */	
 router.get('/:query', wrapAsync(async (request, response) => {
   const query = request.params.query
-  const { api } = await readConfig('keys.json')
+  const json = await fs.readFile('config/keys.json', 'utf-8')
+  const { api } = JSON.parse(json)
   const giantBombAPIURL = (
     'https://www.giantbomb.com/api/search/?api_key=' + api
     + '&field_list=id,image,name,deck,site_detail_url,expected_release_day,expected_release_month,expected_release_year'

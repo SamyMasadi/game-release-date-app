@@ -1,15 +1,24 @@
 const mongoose = require('mongoose')
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+const fs = require('fs').promises
 
-const { readConfig } = require('../middleware/functions')
+const User = require('../models/User')
 
 const db = mongoose.connection
 db.once('open', () => { console.log('MongoDB connnected...') })
 connectDB().catch(error => console.error(error))
 
 async function connectDB() {
-  const { host,user,password,database } = await readConfig('database.json')
+  const json = await fs.readFile('config/database.json', 'utf-8')
+  const { host,user,password,database } = JSON.parse(json)
   const mongoURI = 'mongodb://'+user+':'+password+'@'+host+'/'+database
-  await mongoose.connect(mongoURI, {useNewUrlParser: true})
+  const dbOptions = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true
+  }
+  await mongoose.connect(mongoURI, dbOptions)
 }
 
 /**
@@ -23,45 +32,41 @@ async function checkUser(email, password) {
     throw new Error('formValidationError')
   }
 
-  const query = 'SELECT * FROM user WHERE email = ?'
-  const [rows, fields] = await dbPool.query(query, email)
-
-  return rows[0]
+  const user = await User.findOne({ email: email }).exec()
+  return user
 }
 
 /**
  * Queries the database for an existing user.
- * @param {string} id The user's id
+ * @param {Object} id The user's id
  * @return The queried user object
  */
-async function getUserByID(id) { 
-  const query = 'SELECT uid, email, register_date FROM user WHERE uid = ?'
-  const [rows, fields] = await dbPool.query(query, id)
-
-  return rows[0]
+async function getUserByID(id) {
+  const user = await User.findOne({ _id: id }).select('_id email watch_list').exec()
+  return user
 }
 
 /**
  * Adds a new user to the database then responds with a JSON web token.
  * @param {string} email The user's email
  * @param {string} password The user's password
- * @return An object containing a JSON web token and the user's id
+ * @return A JSON web token
  */
 async function registerUser(email, password) {
   const saltRounds = 10
   const salt = await bcrypt.genSalt(saltRounds)
   const hash = await bcrypt.hash(password, salt)
 
-  const query = 'INSERT INTO user (email, password) VALUES (?, ?)'
-  const [response, fields] = await dbPool.query(query, [email, hash])
-  
-  const keys = await readConfig('keys.json')
-  const token = jwt.sign({ id: response.insertId }, keys.jwtSecret, { expiresIn: 3600 })
+  const newUser = new User({
+    email: email,
+    password: hash
+  })
+  const { _id } = await newUser.save()
 
-  return { 
-    token: token,
-    id: response.insertId
-  }
+  const json = await fs.readFile('config/keys.json', 'utf-8')
+  const { jwtSecret } = JSON.parse(json)
+  const token = jwt.sign({ id: _id }, jwtSecret, { expiresIn: 3600 })
+  return token
 }
 
 module.exports = {
