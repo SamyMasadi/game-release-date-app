@@ -2,28 +2,40 @@
 
 A web app for searching basic video game info and release dates from [GiantBomb.com's API](https://www.giantbomb.com/api/).
 
-The project utilizes JavaScript, HTML, CSS, React.js, Create React App, Node.js, Express.js, and Axios.js.
+The project is built on the MERN stack: MongoDB, Express, React, and Node.
+Other tools used: axios, bcryptjs, concurrently, jsonwebtoken, mongoose, and nodemon.
 
 ## Required Software
 
-Node.js: https://nodejs.org/en/
+* Node.js: https://nodejs.org/en/
+* MongoDB: https://www.mongodb.com/
 
 ## Initial Setup
 
 1. Get a free API key from GiantBomb.com: https://www.giantbomb.com/api/
 2. Add your key to ./config/keys.json
+3. Also add a secret for encoding JWTs.
 ```
 {
-    "api": "Your Key Here"
+    "api" : "GB_API_KEY",
+    "jwtSecret" : "YOUR_JWT_SECRET"
 }
 ```
-Note: The API key is only loaded by the Express Node server, so it should not be bundled into client pages by the React build script.<br>
+4. Enter MongoDB config details in ./config/database.json
+```
+  "host" : "db_host",
+  "user" : "db_user",
+  "password" : "db_pass",
+  "database" : "db_collection_name"
+```
+Note: App secrets are only meant to be used by the Node server. Be careful not to use them in client pages or commit them to a public repository.<br>
 
-3. Install package dependencies for both the server and client.
+5. Install package dependencies for both the server and client.
 ```
 cd <app directory>
 npm install
-cd client && npm install
+cd client
+npm install
 ```
 
 ## How to Run
