@@ -17,8 +17,8 @@ Other tools used: axios, bcryptjs, concurrently, jsonwebtoken, mongoose, and nod
 3. Also add a secret for encoding JWTs.
 ```
 {
-    "api" : "GB_API_KEY",
-    "jwtSecret" : "YOUR_JWT_SECRET"
+    "api" : "gb_api_key",
+    "jwtSecret" : "your_jwt_secret"
 }
 ```
 4. Enter MongoDB config details in ./config/database.json
