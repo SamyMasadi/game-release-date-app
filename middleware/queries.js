@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken')
 const fs = require('fs').promises
 
 const User = require('../models/User')
+const ApiResult = require('../models/ApiResult')
 
 const db = mongoose.connection
 db.once('open', () => { console.log('MongoDB connnected...') })
@@ -19,6 +20,23 @@ async function connectDB() {
     useCreateIndex: true
   }
   await mongoose.connect(mongoURI, dbOptions)
+}
+
+async function getApiResults(query, page) {
+  const apiResults = await ApiResult.findOne({ query, page }).exec()
+  return apiResults
+}
+
+async function saveApiResults(query, page, results, savedResults) {
+  const query_page = query + '_' + page
+  let newResults = { query_page, query, page, results }
+  if (savedResults) {
+    newResults.date = Date.now()
+    savedResults.overwrite(newResults)
+    return await savedResults.save()
+  }
+  const newApiResult = new ApiResult(newResults)
+  await newApiResult.save()
 }
 
 /**
@@ -70,6 +88,8 @@ async function registerUser(email, password) {
 }
 
 module.exports = {
+  getApiResults,
+  saveApiResults,
   checkUser,
   getUserByID,
   registerUser
