@@ -92,7 +92,7 @@ class Search extends React.Component {
       resultsArea: <LoadingSpinner/>
     })
     console.log('Searching: ' + searchTerm)
-    const queryURL = '/api/' + searchTerm
+    const queryURL = '/api?query=' + searchTerm
     let resultsJSON
     try {
       const response = await fetch(queryURL)
