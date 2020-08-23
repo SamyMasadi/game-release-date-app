@@ -6,19 +6,19 @@ const { URLSearchParams } = require('url')
 
 const { wrapAsync } = require('../middleware/functions')
 const { getApiResults, saveApiResults } = require('../middleware/queries')
+const { checkApiQuery } = require('../middleware/validate')
 
 /**
  * @route GET api
  * @desc Fetch search results from Giant Bomb API or database
  * @access Public
  */	
-router.get('', wrapAsync(async (request, response) => {
+router.get('', wrapAsync(checkApiQuery), wrapAsync(async (request, response) => {
   const query = request.query.query
   let page = 1
   if (request.query.page) {
     page = request.query.page
   }
-  // To Do: validate query params
   const currentTime = Date.now()
   const maxAge = 1000 * 60 * 60 * 24 // 24 hours
 
