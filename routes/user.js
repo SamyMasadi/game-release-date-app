@@ -2,18 +2,18 @@ const express = require('express')
 const router = express.Router()
 
 const { wrapAsync, checkAuth } = require('../middleware/functions')
-const { checkUser, registerUser, getUserByID } = require('../middleware/queries')
+const { getUserByEmail, registerUser, getUserByID } = require('../middleware/queries')
+const { checkUserVars } = require('../middleware/validate')
 
 /**
  * @route POST /user
  * @desc Register new user
  * @access Public
  */
-router.post('/', wrapAsync(async (request, response) => {
+router.post('/', wrapAsync(checkUserVars), wrapAsync(async (request, response) => {
   let { email, password } = request.body
-  email = email.toLowerCase()
 
-  const user = await checkUser(email, password)
+  const user = await getUserByEmail(email)
   if (user) throw new Error('preExistingUserError')
 
   const token = await registerUser(email, password)

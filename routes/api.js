@@ -14,20 +14,26 @@ const { checkApiQuery } = require('../middleware/validate')
  * @access Public
  */	
 router.get('', wrapAsync(checkApiQuery), wrapAsync(async (request, response) => {
-  const query = request.query.query
+  const query = request.query.query.toLowerCase()
   let page = 1
   if (request.query.page) {
     page = request.query.page
   }
   const currentTime = Date.now()
   const maxAge = 1000 * 60 * 60 * 24 // 24 hours
+  let savedResults
 
-  // Use cached results less than maxAge to reduce API usage.
-  const savedResults = await getApiResults(query, page)
-  if (savedResults && currentTime < savedResults.date.getTime() + maxAge) {
-    return response.json(savedResults.results)
+  try {
+    // Use cached results less than maxAge to reduce API usage.
+    savedResults = await getApiResults(query, page)
+    if (savedResults && currentTime < savedResults.date.getTime() + maxAge) {
+      return response.json(savedResults.results)
+    }
+  } catch (error) {
+    console.error(error)
   }
 
+  // Default to GB API only if saved results have expired or if DB query fails.
   const json = await fs.readFile('config/keys.json', 'utf-8')
   const { api } = JSON.parse(json)
   const giantBombAPIParams = new URLSearchParams({
@@ -39,10 +45,10 @@ router.get('', wrapAsync(checkApiQuery), wrapAsync(async (request, response) => 
     query: query
   })
   const giantBombAPIURL = 'https://www.giantbomb.com/api/search/?' + giantBombAPIParams;
-
   const apiResponse = await axios.get(giantBombAPIURL)
   const { results } = apiResponse.data
   console.log('Fetched fresh results for ' + query)
+
   // Saving results should not affect response.
   saveApiResults(query, page, results, savedResults).catch(error => console.error(error))
   response.json(results)

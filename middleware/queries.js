@@ -8,6 +8,7 @@ const ApiResult = require('../models/ApiResult')
 
 const db = mongoose.connection
 db.once('open', () => { console.log('MongoDB connnected...') })
+db.once('disconnected', () => { console.log('MongoDB disconnected...') })
 connectDB().catch(error => console.error(error))
 
 async function connectDB() {
@@ -42,14 +43,9 @@ async function saveApiResults(query, page, results, savedResults) {
 /**
  * Queries the database for an existing user.
  * @param {string} email The user's email
- * @param {string} password The user's password
  * @return The queried user object
  */
-async function checkUser(email, password) {  
-  if (!email || !password) {
-    throw new Error('formValidationError')
-  }
-
+async function getUserByEmail(email) {
   const user = await User.findOne({ email: email }).exec()
   return user
 }
@@ -90,7 +86,7 @@ async function registerUser(email, password) {
 module.exports = {
   getApiResults,
   saveApiResults,
-  checkUser,
+  getUserByEmail,
   getUserByID,
   registerUser
 }

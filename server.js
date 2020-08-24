@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const path = require('path')
 
-const { logErrors, clientErrorHandler, apiErrorHandler, databaseErrorHandler, defaultErrorHandler } = require('./middleware/error')
+const { logErrors, validationErrorHandler, clientErrorHandler, apiErrorHandler, databaseErrorHandler, defaultErrorHandler } = require('./middleware/error')
 
 app.use(express.static('./client/build'))
 
@@ -25,6 +25,7 @@ app.get('/*', (request, response) => {
 //  Must be declared after all routes.  //
 //////////////////////////////////////////
 app.use(logErrors)
+app.use(validationErrorHandler)
 app.use(clientErrorHandler)
 app.use(apiErrorHandler)
 app.use(databaseErrorHandler)

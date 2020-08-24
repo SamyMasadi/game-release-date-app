@@ -8,11 +8,15 @@ function logErrors(err, req, res, next) {
   next(err)
 }
 
-function clientErrorHandler(err, req, res, next) {
-  if (err.message === 'formValidationError') {
-    return res.status(BAD_REQUEST).json({ message: 'Please enter all fields.' })
+function validationErrorHandler(err, req, res, next) {
+  if (err.errors && err.errors.length > 0) {
+    return res.status(BAD_REQUEST).json({ errors: err.errors })
   }
 
+  next(err)
+}
+
+function clientErrorHandler(err, req, res, next) {
   if (err.message === 'invalidUserError') {
     return res.status(BAD_REQUEST).json({ message: 'User does not exist.' })
   }
@@ -45,7 +49,7 @@ function apiErrorHandler(err, req, res, next) {
 }
 
 function databaseErrorHandler(err, req, res, next) {
-  if (err.errno === 'ECONNREFUSED') {
+  if (err.message.includes('ECONNREFUSED')) {
     return res.status(SERVICE_UNAVAILABLE).json({ message: 'A database error occurred.' })
   }
   
@@ -58,6 +62,7 @@ function defaultErrorHandler(err, req, res, next) {
 
 module.exports = {
   logErrors,
+  validationErrorHandler,
   clientErrorHandler,
   apiErrorHandler,
   databaseErrorHandler,

@@ -2,18 +2,18 @@ const express = require('express')
 const router = express.Router()
 
 const { wrapAsync, authenticateUser } = require('../middleware/functions')
-const { checkUser } = require('../middleware/queries')
+const { getUserByEmail } = require('../middleware/queries')
+const { checkLoginVars } = require('../middleware/validate')
 
 /**
  * @route POST /auth
  * @desc Authenticate the user
  * @access Public
  */
-router.post('/', wrapAsync(async (request, response) => {
+router.post('/', wrapAsync(checkLoginVars), wrapAsync(async (request, response) => {
   let { email, password } = request.body
-  email = email.toLowerCase()
 
-  const user = await checkUser(email, password)
+  const user = await getUserByEmail(email)
   if (!user) throw new Error('invalidUserError')
   
   const token = await authenticateUser(user, password)
